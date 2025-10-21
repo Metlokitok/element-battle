@@ -33,6 +33,7 @@ def game_mode_select():
         choice = str(input("Choose an option: "))
         if (choice == "1"): 
             pvp_select()
+            break
         elif (choice == "2"):
             pass
         elif (choice == "3"):
@@ -90,8 +91,11 @@ def pvp_select():
     player_one = FireElement(player_one_name, 10, player_one_type)
     player_two = FireElement(player_two_name, 10, player_two_type)  
     
+    #initiates pvp
     pvp(player_one, player_two)
-    # Will try to think where I'd put the level system
+
+    
+    
     
 def pvp(player_one, player_two):
     print("\n=====================")
@@ -100,38 +104,59 @@ def pvp(player_one, player_two):
     print("=====================\n")
 
     # Game loop
-    while (player_one.get_hp() > 0 and player_two.get_hp() > 0):
+    # Adds another loop for when players wants to rematch
+    while (True):
+        # resets the player's stats, allowing rematch
+        player_one.reset_stats()
+        player_two.reset_stats()
         turn = 1
-        print(f"===== Turn {turn} =====")
+        while (player_one.get_hp() > 0 and player_two.get_hp() > 0):
+            
+            print(f"===== Turn {turn} =====")
 
-        # --- Player One's Turn ---
-        player_one.display_status()
-        player_one.next_Turn(player_two)
+            # --- Player One's Turn ---
+            player_one.display_status()
+            player_one.next_Turn(player_two)
+            
+            # Check if Player Two is defeated
+            if (player_two.get_hp() <= 0):
+                print(f"\n{player_two.get_character_name()} has fainted!")
+                print(f"{player_one.get_character_name()} Wins!\n")
+                break
+
+            # --- Player Two's Turn ---
+            player_two.display_status()
+            player_two.next_Turn(player_one)
+
+            # Check if Player One is defeated
+            if (player_one.get_hp() <= 0):
+                print(f"\n{player_one.get_character_name()} has fainted!")
+                print(f"{player_two.get_character_name()} Wins!\n")
+                break
+            turn += 1
+            print()  # Spacing
+            
+    # Asks the players to either restart the game or go back to menu
+        print("\nContinue?")
+        print("\n1. Rematch\n2. Back to menu\n3. Exit")
         
-        # Check if Player Two is defeated
-        if (player_two.get_hp() <= 0):
-            print(f"\n{player_two.get_character_name()} has fainted!")
-            print(f"{player_one.get_character_name()} Wins!\n")
-            sys.exit()
+        choice = str(input("\nEnter your choice: "))
+        if (choice == "1"):
+            continue # Continues through the loop, resetting player stats
+        elif (choice == "2"):
+            game_mode_select()
             break
-
-        # --- Player Two's Turn ---
-        player_two.display_status()
-        player_two.next_Turn(player_one)
-
-        # Check if Player One is defeated
-        if (player_one.get_hp() <= 0):
-            print(f"\n{player_one.get_character_name()} has fainted!")
-            print(f"{player_two.get_character_name()} Wins!\n")
+        elif (choice == "3"):
+            print("Exiting...")
             sys.exit()
-            break
-
-        turn += 1
-        print()  # Spacing
+        else:
+            print("Invalid input!")
 
         
-
+# Testing: Will remove at a later update
 def test():
     player_one = FireElement("player_one_test", 10, "fire")
     player_two = FireElement("player_two_test", 10, "fire")
     pvp(player_one, player_two)
+    
+    

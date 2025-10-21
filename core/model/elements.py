@@ -33,28 +33,37 @@ class FireElement(Character):
         
     # Special Attack One [Flameburst]: Deals moderate damage, may inflict burn on target     
     def special_attack_one(self, enemy):
-        enemy.modify_hp((self.get_attack()*1.5))  
-        print(f"{self.get_character_name()} burns {enemy.get_character_name()}, dealing {(self.get_attack()*1.5)} damage")
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5))  
+        print(f"{self.get_character_name()} burns {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5)} damage")
         
     # Special Attack Two [Big Fireball]    
     def special_attack_two(self, enemy):
-        enemy.modify_hp((self.get_attack()*2.5))
-        print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {(self.get_attack()*2.5)} damage")   
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), 2.5))
+        print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {self.calculate_dmg(self.get_attack(), enemy.get_defense(), 2.5)} damage")   
     
+    # Display skills
     def display_skills(self):
         print("\n1. [Fireball]: Throws fireball at the enemy, dealing low damage")
         print("2. [Raise Temperature]: Increase Temperature around the enemy, lowering its attack")
         print("3. [Flameburst]: Launches a barrage of flames at the enemy, dealing moderate damage, and has a chance to inflict burn")
         print("4. [Big Fireball]: Throws a comically large fireball at the enemy, dealing major damage")
         
+    # This is where players makes their turns
     def next_Turn(self, enemy):
         self.display_skills()
-        choice = int(input("Choose your option: "))
-        if (choice == 1):
-            self.basic_attack(enemy)
-        elif(choice == 2):
-            self.status_attack(enemy)
-        elif(choice == 3):
-            self.special_attack_one(enemy)
-        elif(choice == 4):
-            self.special_attack_two(enemy)
+        while (True):
+            choice = str(input("Choose your option: "))
+            if (choice == "1"):
+                self.basic_attack(enemy)
+                break
+            elif(choice == "2"):
+                self.status_attack(enemy)
+                break
+            elif(choice == "3"):
+                self.special_attack_one(enemy)
+                break
+            elif(choice == "4"):
+                self.special_attack_two(enemy)
+                break
+            else:
+                print("Invalid input!")
