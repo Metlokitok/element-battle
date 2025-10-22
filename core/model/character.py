@@ -137,7 +137,7 @@ class Character(ABC):
         self.modify_mp(10)
         
         enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),0))
-        print(f"{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),0)} damage")   
+        print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),0)} damage")   
         
     # Buff/Debuff Attack: Inflict Status effects (atk reduction(fire), def reduction(grass), atk increase(water/electric), def increase(ground))
     @abstractmethod

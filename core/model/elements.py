@@ -31,31 +31,31 @@ class FireElement(Character):
         # Checks if player has enough mana
         status_attack_cost = 10
         if (self.get_mp() < status_attack_cost):
-            print("Insufficient mana!")
+            print("\nInsufficient mana!")
             return False
         
         self.modify_mp(-(status_attack_cost))
         enemy.modify_attack(2)
-        print(f"{self.get_character_name()} scared {enemy.get_character_name()}, reducing its attack!")
+        print(f"\n{self.get_character_name()} scared {enemy.get_character_name()}, reducing its attack!")
         return True
         
     # Special Attack One [Flameburst]: Deals moderate damage, may inflict burn on target     
     def special_attack_one(self, enemy):
         special_attack_one_cost = 25
         if (self.get_mp() < special_attack_one_cost):
-            print("Insufficient mana!")
+            print("\nInsufficient mana!")
             return False
         
         self.modify_mp(-(special_attack_one_cost))
         enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5))  
-        print(f"{self.get_character_name()} burns {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5)} damage")
+        print(f"\n{self.get_character_name()} burns {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5)} damage")
         return True
         
     # Special Attack Two [Big Fireball]    
     def special_attack_two(self, enemy):
         special_attack_two_cost = 50
         if (self.get_mp() < special_attack_two_cost):
-            print("Insufficient mana!")
+            print("\nInsufficient mana!")
             return False
         
         self.modify_mp(-(special_attack_two_cost))
@@ -72,6 +72,8 @@ class FireElement(Character):
         
     # This is where players makes their turns
     def next_Turn(self, enemy):
+        print(f"\n===== It's {self.get_character_name()}'s Turn! =====")
+        self.display_status()
         self.display_skills()
         while (True):
             choice = str(input("\nChoose your option: "))
@@ -92,4 +94,5 @@ class FireElement(Character):
                     break
             else:
                 print("\nInvalid input!")
+        print(f"\n===== {self.get_character_name()}'s Turn Ended! =====")
         

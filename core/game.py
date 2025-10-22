@@ -118,7 +118,6 @@ def pvp(player_one, player_two):
             print(f"===== Turn {turn} =====")
 
             # --- Player One's Turn ---
-            player_one.display_status()
             player_one.next_Turn(player_two)
             
             # Check if Player Two is defeated
@@ -128,7 +127,6 @@ def pvp(player_one, player_two):
                 break
 
             # --- Player Two's Turn ---
-            player_two.display_status()
             player_two.next_Turn(player_one)
 
             # Check if Player One is defeated
