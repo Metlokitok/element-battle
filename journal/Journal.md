@@ -31,3 +31,11 @@ Personal Journal, so you can see my descent to madness
     - Fixed issue where you are prompted to make an option instead of exiting the game
     - Fixed rematch issues
     - Fixed error during player turn wherein it crashes when making invalid inputs
+
+## 10-22-2025
+- Features:
+    - Mana system added. Players will now have to be mindful of their mana usage
+- Changes
+    - Terminal outputs. Added proper spacing and some fancy terminal prints
+- Bug fixes:
+    - Fixed issue where players are prompted to attack more than once whenever they chose skills that has insufficient mana cost
