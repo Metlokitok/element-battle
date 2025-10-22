@@ -126,6 +126,7 @@ class Character(ABC):
     def display_skills(self):
         pass # to be implemented by the subclass    
     
+    # Defines how players make a turn
     @abstractmethod
     def next_Turn(self, enemy):
         pass

@@ -8,12 +8,12 @@ from core.model.elements import element_chart
 
 # Run menu
 def run_menu():
-    print("\nWelcome!")
+    print("\nWelcome to Element Battle!")
     print("1. Start")
     print("2. Exit")    
     
     while (True):
-        choice = str(input("Choose an option: "))
+        choice = str(input("Please choose an option: "))
         if (choice == "1"): 
             break
         elif (choice == "2"):
@@ -25,18 +25,21 @@ def run_menu():
     
 def game_mode_select():
     print("\nSelect a game mode:")
-    print("1. Player versus player")
+    print("1. Player versus Player")
     print("2. Player versus CPU")
-    print("3. Endless mode")
+    print("3. Endless Mode")
     print("4. Back")
     while (True):
-        choice = str(input("Choose an option: "))
+        choice = str(input("\nChoose an option: "))
         if (choice == "1"): 
+            print("\nYou have selected Player vs Player")
             pvp_select()
             break
         elif (choice == "2"):
+            print("\nYou have selected Player vs CPU")
             pass
         elif (choice == "3"):
+            print("\nYou have selected Endless Mode")
             pass
         elif (choice == "4"):
             run_menu()

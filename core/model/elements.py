@@ -52,7 +52,7 @@ class FireElement(Character):
     def next_Turn(self, enemy):
         self.display_skills()
         while (True):
-            choice = str(input("Choose your option: "))
+            choice = str(input("\nChoose your option: "))
             if (choice == "1"):
                 self.basic_attack(enemy)
                 break
@@ -66,4 +66,4 @@ class FireElement(Character):
                 self.special_attack_two(enemy)
                 break
             else:
-                print("Invalid input!")
+                print("\nInvalid input!")
