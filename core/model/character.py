@@ -13,8 +13,10 @@ class Character(ABC):
         self.__max_hp = 10*level
         self.__hp = self.__max_hp
         
-        # Mana points (To be implemented)
-        self.__max_mp = level
+        # Mana points
+        # Each attack (Except basic attack) cost mana
+        
+        self.__max_mp = 5*level
         self.__mp = self.__max_mp
         
         self.__base_attack = 2*level
@@ -37,11 +39,23 @@ class Character(ABC):
     def get_character_type(self):
         return self.__type
     
-    # Returns character attack
+    # Returns character max hp
+    def get_max_hp(self):
+        return self.__max_hp
+    
+    # Returns character hp
     def get_hp(self):
         return self.__hp 
     
-    # Returns character hp
+    # Returns character max mp
+    def get_max_mp(self):
+        return self.__max_mp
+    
+    # Returns character mp
+    def get_mp(self):
+        return self.__mp
+    
+    # Returns character attack
     def get_attack(self):
         return self.__attack
     
@@ -56,6 +70,16 @@ class Character(ABC):
     # Returns character type
     def get_type(self):
         return self.__type
+    
+    
+    #### Stat modifiers
+
+    # Resets hp stat (for rematch/level up/etc.)
+    def reset_stats(self):
+        self.__hp = self.__max_hp
+        self.__mp = self.__max_mp
+        self.__attack = self.__base_attack
+        self.__defense = self.__base_defense
 
     # Modify hp stat (for taking damage)
     def modify_hp(self, damage):
@@ -63,12 +87,18 @@ class Character(ABC):
         if (self.__hp <= 0):
             self.__hp = 0
             
-    # Resets hp stat (for rematch/level up/etc.)
-    def reset_stats(self):
-        self.__hp = self.__max_hp
-        self.__attack = self.__base_attack
-        self.__defense = self.__base_defense  
-
+    # Modify mp stat (for skill usage)
+    def modify_mp(self, value):
+        self.__mp += value
+        
+        # Prevents mp overload
+        if (self.__mp > self.__max_mp):
+            self.__mp = self.__max_mp
+        elif (self.__mp < 0):
+            self.__mp = 0
+        
+        
+    
     # Modify attack stat (for debuff)
     def modify_attack(self, attack_debuff):
         self.__attack -= attack_debuff
@@ -86,12 +116,11 @@ class Character(ABC):
     # Display character status
     def display_status(self):
         print(f"\nName: {self.get_character_name()}")
-        print(f"HP: {self.get_hp()}")
+        print(f"HP: {self.get_hp()}/{self.get_max_hp()}")
+        print(f"MP: {self.get_mp()}/{self.get_max_mp()}")
         print(f"Level: {self.get_level()}")
         print(f"Type: {self.get_type()}")    
         
-    # Character's Skillsets (Abstraction)
-    
     # Damage calculation: To be used before modifying HP
     # Calculation is (Base Attack * Multiplier) - Enemy Defense
     def calculate_dmg(self, base_attack, enemy_defense, multiplier):
@@ -100,9 +129,13 @@ class Character(ABC):
             return base_attack - enemy_defense
         # return with multiplier
         return (base_attack * multiplier) - enemy_defense
-        
-    # Basic Attack: Low dmg, cost 0 mp
+         
+    #### Character's Skillsets (Abstraction)        
+    # Basic Attack: Low dmg, gains mp
     def basic_attack(self, enemy):
+        # restores mp
+        self.modify_mp(10)
+        
         enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),0))
         print(f"{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),0)} damage")   
         
