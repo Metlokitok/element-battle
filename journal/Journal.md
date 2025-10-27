@@ -39,3 +39,12 @@ Personal Journal, so you can see my descent to madness
     - Terminal outputs. Added proper spacing and some fancy terminal prints
 - Bug fixes:
     - Fixed issue where players are prompted to attack more than once whenever they chose skills that has insufficient mana cost
+
+## 10-27-2025
+- Took a break, forgor this exist
+- Features:
+    - Buff, debuff, and damage over time (DoT) planned
+- Issues:
+    - Debuff not properly called yet
+    - Debuff not being applied
+    - Updated code to be pushed once new features is ready to be implemented
