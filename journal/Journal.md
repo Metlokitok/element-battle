@@ -48,3 +48,13 @@ Personal Journal, so you can see my descent to madness
     - Debuff not properly called yet
     - Debuff not being applied
     - Updated code to be pushed once new features is ready to be implemented
+
+## 11-01-2025
+- I keep forgetting
+- Fixes (Somewhat)
+    - DoTs are properly being implemented, however they are part of another feature (chanced based) which is to be implemented as well
+- Issues: 
+    - The status debuff is still not being applied properly. Issues include:
+        - debuffs of the same type keeps stacking (Might be implemented in the future)
+        - changes on player stats not going back to original stat even after the debuff duration ended
+    - Again, updated code to be pushed once new features are ready to be implemented
