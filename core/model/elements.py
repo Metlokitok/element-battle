@@ -4,6 +4,8 @@
 
 from abc import ABC, abstractmethod
 from core.model.character import Character
+from core.model.character import StatusEffect
+from core.model import status_effects as status_effect
 
 # Element chart for weakness/resistance type for damage calculation (To be implemented)
 element_chart = {
@@ -13,8 +15,6 @@ element_chart = {
     "electric": {"weak": ["ground"], "resist": ["water"]},
     "water":   {"weak": ["electric"], "resist": ["fire"]}
 }
-
-
 
 # Fire Element Character
 # First subclass that inherits from Character main class
@@ -35,8 +35,8 @@ class FireElement(Character):
             return False
         
         self.modify_mp(-(status_attack_cost))
-        enemy.modify_attack(2)
         print(f"\n{self.get_character_name()} scared {enemy.get_character_name()}, reducing its attack!")
+        enemy.add_status(StatusEffect("Attack Down", 3, "DEBUFF",status_effect.attack_reduction, self.get_attack()))
         return True
         
     # Special Attack One [Flameburst]: Deals moderate damage, may inflict burn on target     
@@ -73,6 +73,7 @@ class FireElement(Character):
     # This is where players makes their turns
     def next_Turn(self, enemy):
         print(f"\n===== It's {self.get_character_name()}'s Turn! =====")
+        self.update_status_effects()
         self.display_status()
         self.display_skills()
         while (True):

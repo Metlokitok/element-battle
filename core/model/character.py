@@ -3,6 +3,7 @@
 
 from abc import ABC, abstractmethod
 
+# Character Superclass
 class Character(ABC):
     # Constructor, self defines this class
     def __init__(self, name, level, element_type):
@@ -24,6 +25,9 @@ class Character(ABC):
         
         self.__base_defense = level
         self.__defense = self.__base_defense
+        
+        # Will hold multiple status effects (Buffs/Debuffs/DoTs)
+        self.status_effects = []
         
         
     
@@ -97,8 +101,6 @@ class Character(ABC):
         elif (self.__mp < 0):
             self.__mp = 0
         
-        
-    
     # Modify attack stat (for debuff)
     def modify_attack(self, attack_debuff):
         self.__attack -= attack_debuff
@@ -112,14 +114,51 @@ class Character(ABC):
         if (self.__defense <= 0):
             print("Defense cannot go any lower!")
             self.__defense = 0
+            
+     # (NEW) Add New Status to the character
+    def add_status(self, effect):
+        
+        # Note: you are adding an object as a parameter here (see class StatusEffect)
+        self.status_effects.append(effect)
+        print(f"\n{self.get_character_name()} is now affected by {effect.get_name()} for {effect.get_duration()} turns!")
+        
+    # Apply status effects and update status duration or remove status if duration <= 0    
+    def update_status_effects(self):
+        # list used for looping expired status
+        expired = []
+        for effect in self.status_effects:           
+            # It has 3 effect types: "BUFF", "DEBUFF", "DOT"
+            if (effect.get_effect_type() == "BUFF"):
+                effect.apply(self)
+            elif (effect.get_effect_type() == "DEBUFF"):
+                effect.apply(self)
+            elif (effect.get_effect_type() == "DOT"):
+                effect.apply_dot(self)
+                
+            if (effect.get_duration() == 0):
+                expired.append(effect)    
+                
+        # Removes status that are added in expired list        
+        for e in expired:
+            e.revert_status(self)
+            self.status_effects.remove(e)
+            print(f"{self.get_character_name()} is no longer affected by {e.get_name()}.")
         
     # Display character status
     def display_status(self):
         print(f"\nName: {self.get_character_name()}")
         print(f"HP: {self.get_hp()}/{self.get_max_hp()}")
         print(f"MP: {self.get_mp()}/{self.get_max_mp()}")
+        
+        print(f"Attack: {self.get_attack()}/{self.__base_attack}")
         print(f"Level: {self.get_level()}")
-        print(f"Type: {self.get_type()}")    
+        print(f"Type: {self.get_type()}")
+        
+        # Display active status
+        if self.status_effects: 
+            print("Active effects:", ", ".join(f"{e.get_name()}({e.get_duration()})" for e in self.status_effects)) 
+        else: 
+            print("No active effects.")    
         
     # Damage calculation: To be used before modifying HP
     # Calculation is (Base Attack * Multiplier) - Enemy Defense
@@ -165,3 +204,47 @@ class Character(ABC):
         pass
     
     
+ 
+# Classes that inflicts status effects. To see how different status affects players, see status_effects.py 
+class StatusEffect:
+    def __init__(self, name, duration, effect_type ,effect_function, value_change):
+        self.__name = name
+        self.__duration = duration
+        
+        # It has 3 effect types: "BUFF", "DEBUFF", "DOT" 
+        self.__effect_type = effect_type
+        self.effect_function = effect_function
+        
+        # For Buff/Debuff calculation (based on player stat)
+        self.stats_value = value_change * 0.2
+        
+        # For DoT damage calculation (based on enemy attack)
+        self.dots_value = value_change * 0.5
+        
+        # For determining whether the effect has been applied
+        self.is_applied = False
+    
+    def get_name(self): 
+        return self.__name
+    
+    def get_duration(self):
+        return self.__duration
+    
+    def get_effect_type(self):
+        return self.__effect_type
+        
+    # Apply Buff/Debuff
+    def apply(self, target):
+        if (not self.is_applied):
+            self.effect_function(target, self.stats_value)
+            self.is_applied = True
+        self.__duration -= 1
+        
+    def revert_status(self, target):
+        self.effect_function(target, -self.stats_value)    
+        
+    # Apply DoTs
+    def apply_dot(self, target):
+        self.effect_function(target, self.dots_value)
+        self.__duration -= 1
+        

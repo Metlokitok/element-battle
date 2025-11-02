@@ -2,9 +2,10 @@
 
 import sys
 from core.model.character import Character
+from core.model.character import StatusEffect
 from core.model.elements import FireElement
 from core.model.elements import element_chart
-
+from core.model import status_effects as status_effect
 
 # Run menu
 def run_menu():
@@ -96,9 +97,6 @@ def pvp_select():
     
     #initiates pvp
     pvp(player_one, player_two)
-
-    
-    
     
 def pvp(player_one, player_two):
     print("\n=====================")
@@ -152,12 +150,15 @@ def pvp(player_one, player_two):
             sys.exit()
         else:
             print("Invalid input!")
-
-        
+      
 # Testing: Will remove at a later update
 def test():
     player_one = FireElement("player_one_test", 10, "fire")
     player_two = FireElement("player_two_test", 10, "fire")
+    
     pvp(player_one, player_two)
+
+    
+    
     
     
