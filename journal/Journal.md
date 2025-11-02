@@ -58,3 +58,14 @@ Personal Journal, so you can see my descent to madness
         - debuffs of the same type keeps stacking (Might be implemented in the future)
         - changes on player stats not going back to original stat even after the debuff duration ended
     - Again, updated code to be pushed once new features are ready to be implemented
+
+## 11-02-2025
+- Finally
+- Features: 
+    - Buffs, Debuffs, Damage-over-time (DoTs) now implemented!
+- Bug Fixes:
+    - Fixed issue where player stats does not go back to its original value
+- (New) Coming up next:
+    - Chanced based DoT
+    - Code and Documentation cleanup
+    - README update
