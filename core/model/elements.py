@@ -49,6 +49,7 @@ class FireElement(Character):
         self.modify_mp(-(special_attack_one_cost))
         enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5))  
         print(f"\n{self.get_character_name()} burns {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5)} damage")
+        enemy.add_status(StatusEffect("Burn", 3, "DOT", status_effect.burn, self.get_attack()))
         return True
         
     # Special Attack Two [Big Fireball]    
