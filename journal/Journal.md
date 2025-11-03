@@ -69,3 +69,17 @@ Personal Journal, so you can see my descent to madness
     - Chanced based DoT
     - Code and Documentation cleanup
     - README update
+
+## 11-03-2025
+- Features:
+    - Fire type small update: every attack has chance of inflicting "Burn" DoT 
+- Fixes:
+    - Fixed some code typography
+    - Fixed issue where DoT status effects returns hp after its duration
+    - Fixed issue where game doesn't end when the DoT reduce hp to 0
+    - Fixed issue where game restarts when entering invalid inputs
+- Coming up next:
+    - More code cleanup
+    - Damage scaling adjustments
+    - README
+    - New element types

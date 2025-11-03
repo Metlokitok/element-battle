@@ -20,3 +20,10 @@ Notes for ideas, fixes, features, etc.
     - The status effects happens on the player that was applied to, not applies status effects on another player
     - There needs to be a small documentation for how damage works, debuff types, element types, etc
         - Probably in the future updates
+
+## Element Types and their playstyle (Draft)
+- Fire
+    - Strong against grass, weak against water
+    - Can reduce enemy attack
+    - Every attack has chance of inflicting "Burn" DoT
+    - Ultimate deals great damage when target is under burn effect 
