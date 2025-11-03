@@ -125,6 +125,7 @@ class Character(ABC):
             elif (effect.get_effect_type() == "DEBUFF"):
                 effect.apply(self)
             elif (effect.get_effect_type() == "DOT"):
+                print(f"\n{self.get_character_name()} gets hurt from burning, receiving {effect.dots_value} damage!")
                 effect.apply_dot(self)
                 
             if (effect.get_duration() == 0):
@@ -132,7 +133,9 @@ class Character(ABC):
             
         # Removes status that are added in expired list        
         for e in expired:
-            e.revert_status(self)
+            # prevents dot status effects from reverting
+            if (e.get_effect_type() == "BUFF" or e.get_effect_type() == "DEBUFF"):
+                e.revert_status(self)
             self.status_effects.remove(e)
             print(f"{self.get_character_name()} is no longer affected by {e.get_name()}.")
         
@@ -148,7 +151,7 @@ class Character(ABC):
         
         # Display active status
         if self.status_effects: 
-            print("Active effects:", ", ".join(f"{e.get_name()}({e.get_duration()})" for e in self.status_effects)) 
+            print("Active effects:", ", ".join(f"{e.get_name()} ({e.get_duration()})" for e in self.status_effects)) 
         else: 
             print("No active effects.")    
         
