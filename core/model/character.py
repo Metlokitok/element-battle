@@ -10,12 +10,9 @@ class Character(ABC):
         self.__name = name
         self.__level = level
         self.__type = element_type.lower()
-        
+
         self.__max_hp = 10*level
         self.__hp = self.__max_hp
-        
-        # Mana points
-        # Each attack (Except basic attack) cost mana
         
         self.__max_mp = 5*level
         self.__mp = self.__max_mp
@@ -26,11 +23,8 @@ class Character(ABC):
         self.__base_defense = level
         self.__defense = self.__base_defense
         
-        # Will hold multiple status effects (Buffs/Debuffs/DoTs)
         self.status_effects = []
-        
-        
-    
+          
     # Returns character name
     def get_character_name(self):
         return self.__name
@@ -75,7 +69,6 @@ class Character(ABC):
     def get_type(self):
         return self.__type
     
-    
     #### Stat modifiers
 
     # Resets hp stat (for rematch/level up/etc.)
@@ -115,9 +108,8 @@ class Character(ABC):
             print("Defense cannot go any lower!")
             self.__defense = 0
             
-     # (NEW) Add New Status to the character
+     # Add New Status to the character
     def add_status(self, effect):
-        
         # Note: you are adding an object as a parameter here (see class StatusEffect)
         self.status_effects.append(effect)
         print(f"\n{self.get_character_name()} is now affected by {effect.get_name()} for {effect.get_duration()} turns!")
@@ -127,7 +119,7 @@ class Character(ABC):
         # list used for looping expired status
         expired = []
         for effect in self.status_effects:           
-            # It has 3 effect types: "BUFF", "DEBUFF", "DOT"
+            #"BUFF", "DEBUFF", "DOT"
             if (effect.get_effect_type() == "BUFF"):
                 effect.apply(self)
             elif (effect.get_effect_type() == "DEBUFF"):
@@ -137,7 +129,7 @@ class Character(ABC):
                 
             if (effect.get_duration() == 0):
                 expired.append(effect)    
-                
+            
         # Removes status that are added in expired list        
         for e in expired:
             e.revert_status(self)
@@ -203,8 +195,6 @@ class Character(ABC):
     def next_Turn(self, enemy):
         pass
     
-    
- 
 # Classes that inflicts status effects. To see how different status affects players, see status_effects.py 
 class StatusEffect:
     def __init__(self, name, duration, effect_type ,effect_function, value_change):

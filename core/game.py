@@ -47,7 +47,6 @@ def game_mode_select():
         else:
             print("invalid input!")
 
-
 # Player vs player select
 def pvp_select():
     while (True):
@@ -155,7 +154,6 @@ def pvp(player_one, player_two):
 def test():
     player_one = FireElement("player_one_test", 10, "fire")
     player_two = FireElement("player_two_test", 10, "fire")
-    
     pvp(player_one, player_two)
 
     
