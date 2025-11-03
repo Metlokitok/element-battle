@@ -2,6 +2,8 @@
 # Single file containing multiple subclasses (Element Types). Will split into multiple files if it gets large
 # Each subclass will have 4 moves: Basic, Debuffer, and 2 Special Skills
 
+import random
+import math
 from abc import ABC, abstractmethod
 from core.model.character import Character
 from core.model.character import StatusEffect
@@ -21,13 +23,29 @@ element_chart = {
 # Uses Fire type attacks. Debuffs Enemy Attack
 # Strong against Grass-types, weak against Water-types
 class FireElement(Character):
-
-    # Inherits Basic Attack from Character main class
-    
+   
     # Basic Attack [Fireball]: Basic attack
+    # New effect: has a small chance of inflicting Burn DoT on opponent (10%)
+    def basic_attack(self, enemy):
+        # Gives a random number between 1-100
+        multiplier = 0
+        chance = math.floor(random.random()*100)+1
+        
+        # restores mp
+        self.modify_mp(10)
+        
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))
+        print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)} damage")
+        
+        if (chance <= 10):
+            enemy.add_status(StatusEffect("Burn", 1, "DOT",status_effect.burn, self.get_attack()))
+         
     
     # Status Attack(Debuffer) [Raise Temperature]: Reduce Enemy Attack (Will implement duration in the future)
+    # New effect: has a very small chance of inflicting Burn DoT on opponent (2%)
     def status_attack(self, enemy):
+        chance = math.floor(random.random()*100)+1
+        
         # Checks if player has enough mana
         status_attack_cost = 10
         if (self.get_mp() < status_attack_cost):
@@ -37,44 +55,68 @@ class FireElement(Character):
         self.modify_mp(-(status_attack_cost))
         print(f"\n{self.get_character_name()} scared {enemy.get_character_name()}, reducing its attack!")
         enemy.add_status(StatusEffect("Attack Down", 3, "DEBUFF",status_effect.attack_reduction, self.get_attack()))
+        
+        if (chance <= 2):
+            enemy.add_status(StatusEffect("Burn", 1, "DOT",status_effect.burn, self.get_attack()))
+        
         return True
         
     # Special Attack One [Flameburst]: Deals moderate damage, may inflict burn on target     
     def special_attack_one(self, enemy):
+        multiplier = 1.5
         special_attack_one_cost = 25
         if (self.get_mp() < special_attack_one_cost):
             print("\nInsufficient mana!")
             return False
         
         self.modify_mp(-(special_attack_one_cost))
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5))  
-        print(f"\n{self.get_character_name()} burns {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), 1.5)} damage")
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))  
+        print(f"\n{self.get_character_name()} burns {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")
+        
         enemy.add_status(StatusEffect("Burn", 3, "DOT", status_effect.burn, self.get_attack()))
+        
         return True
         
-    # Special Attack Two [Big Fireball]    
+    # Special Attack Two [Big Fireball]  : Deals great damage. Damage doubles when target is burning  
     def special_attack_two(self, enemy):
+        multiplier = 2.5
         special_attack_two_cost = 50
         if (self.get_mp() < special_attack_two_cost):
             print("\nInsufficient mana!")
             return False
         
+        # Increase Multiplier when enemy is burning
+        if (any(effect.get_name()=="Burn" for effect in enemy.status_effects)):
+            multiplier = 4
+            self.modify_mp(-(special_attack_two_cost))
+            enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))
+            print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")   
+            return True
+        
         self.modify_mp(-(special_attack_two_cost))
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), 2.5))
-        print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {self.calculate_dmg(self.get_attack(), enemy.get_defense(), 2.5)} damage")   
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))
+        print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")
+        
+        # If enemy not burning, add burning status after
+        enemy.add_status(StatusEffect("Burn", 3, "DOT", status_effect.burn, self.get_attack()))
         return True
     
     # Display skills
     def display_skills(self):
-        print("\n1. [Fireball]: Throws fireball at the enemy, dealing low damage")
-        print("2. [Raise Temperature]: Increase Temperature around the enemy, lowering its attack")
-        print("3. [Flameburst]: Launches a barrage of flames at the enemy, dealing moderate damage, and has a chance to inflict burn")
-        print("4. [Big Fireball]: Throws a comically large fireball at the enemy, dealing major damage")
+        print("\n1. [Fireball]: Throws fireball at the enemy, dealing low damage with a low chance of inflicting Burn")
+        print("2. [Raise Temperature]: Increase Temperature around the enemy, lowering its attack, with a very low chance of inflicting Burn")
+        print("3. [Flameburst]: Launches a barrage of flames at the enemy, dealing moderate damage, and has a chance to inflict Burn")
+        print("4. [Big Fireball]: Throws a comically large fireball at the enemy, dealing major damage and inflicts Burn on the enemy")
         
     # This is where players makes their turns
     def next_Turn(self, enemy):
         print(f"\n===== It's {self.get_character_name()}'s Turn! =====")
         self.update_status_effects()
+        
+        # Ends match if Hp reaches 0
+        if (self.get_hp()<=0):
+            return
+        
         self.display_status()
         self.display_skills()
         while (True):

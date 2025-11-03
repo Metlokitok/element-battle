@@ -117,6 +117,12 @@ def pvp(player_one, player_two):
             # --- Player One's Turn ---
             player_one.next_Turn(player_two)
             
+            # Check if Player One is defeated via DoT
+            if (player_one.get_hp() <= 0):
+                print(f"\n{player_one.get_character_name()} has fainted!")
+                print(f"{player_two.get_character_name()} Wins!\n")
+                break
+            
             # Check if Player Two is defeated
             if (player_two.get_hp() <= 0):
                 print(f"\n{player_two.get_character_name()} has fainted!")
@@ -131,24 +137,32 @@ def pvp(player_one, player_two):
                 print(f"\n{player_one.get_character_name()} has fainted!")
                 print(f"{player_two.get_character_name()} Wins!\n")
                 break
+            
+            # Check if Player Two is defeated via DoT
+            if (player_two.get_hp() <= 0):
+                print(f"\n{player_two.get_character_name()} has fainted!")
+                print(f"{player_one.get_character_name()} Wins!\n")
+                break
+            
             turn += 1
             print()  # Spacing
-            
+                   
     # Asks the players to either restart the game or go back to menu
         print("\nContinue?")
         print("\n1. Rematch\n2. Back to menu\n3. Exit")
         
-        choice = str(input("\nEnter your choice: "))
-        if (choice == "1"):
-            continue # Continues through the loop, resetting player stats
-        elif (choice == "2"):
-            game_mode_select()
-            break
-        elif (choice == "3"):
-            print("Exiting...")
-            sys.exit()
-        else:
-            print("Invalid input!")
+        while (True):
+            choice = str(input("\nEnter your choice: "))
+            if (choice == "1"):
+                break # Continues through the loop, resetting player stats
+            elif (choice == "2"):
+                game_mode_select()
+                break
+            elif (choice == "3"):
+                print("Exiting...")
+                sys.exit()
+            else:
+                print("Invalid input!")
       
 # Testing: Will remove at a later update
 def test():

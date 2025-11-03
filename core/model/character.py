@@ -77,6 +77,7 @@ class Character(ABC):
         self.__mp = self.__max_mp
         self.__attack = self.__base_attack
         self.__defense = self.__base_defense
+        self.status_effects = []
 
     # Modify hp stat (for taking damage)
     def modify_hp(self, damage):
@@ -145,7 +146,8 @@ class Character(ABC):
         print(f"HP: {self.get_hp()}/{self.get_max_hp()}")
         print(f"MP: {self.get_mp()}/{self.get_max_mp()}")
         
-        print(f"Attack: {self.get_attack()}/{self.__base_attack}")
+        print(f"Attack: {self.get_attack()}")
+        print(f"Defense: {self.get_defense()}")
         print(f"Level: {self.get_level()}")
         print(f"Type: {self.get_type()}")
         
@@ -166,12 +168,9 @@ class Character(ABC):
          
     #### Character's Skillsets (Abstraction)        
     # Basic Attack: Low dmg, gains mp
+    @abstractmethod
     def basic_attack(self, enemy):
-        # restores mp
-        self.modify_mp(10)
-        
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),0))
-        print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),0)} damage")   
+        pass   
         
     # Buff/Debuff Attack: Inflict Status effects (atk reduction(fire), def reduction(grass), atk increase(water/electric), def increase(ground))
     @abstractmethod
