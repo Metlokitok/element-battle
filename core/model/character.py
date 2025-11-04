@@ -132,7 +132,7 @@ class Character(ABC):
             elif (effect.get_effect_type() == "DEBUFF"):
                 effect.apply(self)
             elif (effect.get_effect_type() == "DOT"):
-                print(f"\n{self.get_character_name()} gets hurt from burning, receiving {effect.dots_value} damage!")
+                print(f"\n{self.get_character_name()} gets hurt from {effect.get_name()}, receiving {effect.dots_value} damage!")
                 effect.apply_dot(self)
                 
             if (effect.get_duration() == 0):

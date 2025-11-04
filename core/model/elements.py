@@ -26,12 +26,13 @@ class FireElement(Character):
         # Gives a random number between 1-100
         multiplier = 0
         chance = math.floor(random.random()*100)+1
+        total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
         
         # restores mp
         self.modify_mp(10)
         
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))
-        print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)} damage")
+        enemy.modify_hp(total_damage)
+        print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {total_damage} damage")
         
         if (chance <= 10):
             enemy.add_status(StatusEffect("Burn", 1, "DOT",status_effect.burn, self.get_attack()))
@@ -61,13 +62,14 @@ class FireElement(Character):
     def special_attack_one(self, enemy):
         multiplier = 1.5
         special_attack_one_cost = 25
+        total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
         if (self.get_mp() < special_attack_one_cost):
             print("\nInsufficient mana!")
             return False
         
         self.modify_mp(-(special_attack_one_cost))
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))  
-        print(f"\n{self.get_character_name()} burns {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")
+        enemy.modify_hp(total_damage)  
+        print(f"\n{self.get_character_name()} burns {enemy.get_character_name()}, dealing {total_damage} damage")
         
         enemy.add_status(StatusEffect("Burn", 3, "DOT", status_effect.burn, self.get_attack()))
         
@@ -77,6 +79,7 @@ class FireElement(Character):
     def special_attack_two(self, enemy):
         multiplier = 2.5
         special_attack_two_cost = 50
+        total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
         if (self.get_mp() < special_attack_two_cost):
             print("\nInsufficient mana!")
             return False
@@ -85,13 +88,13 @@ class FireElement(Character):
         if (any(effect.get_name()=="Burn" for effect in enemy.status_effects)):
             multiplier = 4
             self.modify_mp(-(special_attack_two_cost))
-            enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))
-            print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")   
+            enemy.modify_hp(total_damage)
+            print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {total_damage} damage")   
             return True
         
         self.modify_mp(-(special_attack_two_cost))
         enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))
-        print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")
+        print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {total_damage} damage")
         
         # If enemy not burning, add burning status after
         enemy.add_status(StatusEffect("Burn", 3, "DOT", status_effect.burn, self.get_attack()))
@@ -143,18 +146,19 @@ class GrassElement(Character):
     # New effect: Recover hp if opponent is affected by Poison DoT
     def basic_attack(self, enemy):
         multiplier = 0
-        
+        total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
+        restored_hp = total_damage # 
         # Restores mp
         self.modify_mp(10)
         
         # If enemy is poisoned, recover hp
         if (any(effect.get_name()=="Poison" for effect in enemy.status_effects)):
-            enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))
+            enemy.modify_hp(total_damage)
             
-            self.modify_hp(-(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))) # Must be negative value
+            self.modify_hp(-restored_hp) # Must be negative so that it heals in modify_hp()
             
-            print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)} damage")
-            print(f"\n{self.get_character_name()} also recovers {self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)} hp!")
+            print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {total_damage} damage")
+            print(f"\n{self.get_character_name()} also recovers {restored_hp} hp!")
             return
         
         enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))
@@ -162,6 +166,7 @@ class GrassElement(Character):
     
     # Status Attack (Self Heal) [Regrow]: Heals itself
     def status_attack(self, enemy):
+        restored_hp = self.get_attack()
         
         # Checks if player has enough mana
         status_attack_cost = 10
@@ -171,7 +176,7 @@ class GrassElement(Character):
         
         self.modify_mp(-(status_attack_cost))
         print(f"\n{self.get_character_name()} recovers lost limbs, recovering hp!")
-        self.modify_hp(-(self.get_attack()))
+        self.modify_hp(-(restored_hp))
         
         return True
     
@@ -179,13 +184,15 @@ class GrassElement(Character):
     def special_attack_one(self, enemy):
         multiplier = 1.5
         special_attack_one_cost = 25
+        total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
+        
         if (self.get_mp() < special_attack_one_cost):
             print("\nInsufficient mana!")
             return False
         
         self.modify_mp(-(special_attack_one_cost))
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))  
-        print(f"\n{self.get_character_name()} poisons {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")
+        enemy.modify_hp(total_damage)  
+        print(f"\n{self.get_character_name()} poisons {enemy.get_character_name()}, dealing {total_damage} damage")
         
         enemy.add_status(StatusEffect("Poison", 3, "DOT", status_effect.poison, self.get_attack()))
         
@@ -195,13 +202,17 @@ class GrassElement(Character):
     def special_attack_two(self, enemy):
         multiplier = 2.5
         special_attack_two_cost = 50
+        total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
+        restored_hp = total_damage
+        
         if (self.get_mp() < special_attack_two_cost):
             print("\nInsufficient mana!")
             return False
         
         self.modify_mp(-(special_attack_two_cost))
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))
-        print(f"\n{self.get_character_name()} threw a cluster of exploding seeds at {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage and recovering {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)/2} hp!")
+        enemy.modify_hp(total_damage)
+        self.modify_hp(-restored_hp)
+        print(f"\n{self.get_character_name()} threw a cluster of exploding seeds at {enemy.get_character_name()}, dealing {total_damage} damage and recovering {restored_hp/2} hp!")
     
         enemy.add_status(StatusEffect("Poison", 3, "DOT", status_effect.poison, self.get_attack()))
     
@@ -304,6 +315,7 @@ class WaterElement(Character):
     def next_Turn(self, enemy):
         pass
     
+# used for constructing player characters at game.py    
 element_constructor = {
     "fire": FireElement,
     "grass": GrassElement,
