@@ -83,3 +83,12 @@ Personal Journal, so you can see my descent to madness
     - Damage scaling adjustments
     - README
     - New element types
+
+## 11-04-2025
+- Feature:
+    - New Type: Grass! Elemental Type that can heal itself and inflict poison on enemies
+    - Refactored some code writings
+- Coming up next:
+    - More code cleanup
+    - Damage scaling adjustments (for real this time)
+    - weakness/resistance system
