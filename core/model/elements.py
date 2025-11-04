@@ -19,11 +19,7 @@ element_chart = {
 }
 
 # Fire Element Character
-# First subclass that inherits from Character main class
-# Uses Fire type attacks. Debuffs Enemy Attack
-# Strong against Grass-types, weak against Water-types
 class FireElement(Character):
-   
     # Basic Attack [Fireball]: Basic attack
     # New effect: has a small chance of inflicting Burn DoT on opponent (10%)
     def basic_attack(self, enemy):
@@ -139,4 +135,179 @@ class FireElement(Character):
             else:
                 print("\nInvalid input!")
         print(f"\n===== {self.get_character_name()}'s Turn Ended! =====")
+
+# Grass Element Character        
+class GrassElement(Character):
+    
+    # Basic Attack [Razor Strike]: Basic attack
+    # New effect: Recover hp if opponent is affected by Poison DoT
+    def basic_attack(self, enemy):
+        multiplier = 0
         
+        # Restores mp
+        self.modify_mp(10)
+        
+        # If enemy is poisoned, recover hp
+        if (any(effect.get_name()=="Poison" for effect in enemy.status_effects)):
+            enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))
+            
+            self.modify_hp(-(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))) # Must be negative value
+            
+            print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)} damage")
+            print(f"\n{self.get_character_name()} also recovers {self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)} hp!")
+            return
+        
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier))
+        print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)} damage")
+    
+    # Status Attack (Self Heal) [Regrow]: Heals itself
+    def status_attack(self, enemy):
+        
+        # Checks if player has enough mana
+        status_attack_cost = 10
+        if (self.get_mp() < status_attack_cost):
+            print("\nInsufficient mana!")
+            return False
+        
+        self.modify_mp(-(status_attack_cost))
+        print(f"\n{self.get_character_name()} recovers lost limbs, recovering hp!")
+        self.modify_hp(-(self.get_attack()))
+        
+        return True
+    
+    # Special Attack One (Poison Vine): Deals moderate damage, may inflict poison on target
+    def special_attack_one(self, enemy):
+        multiplier = 1.5
+        special_attack_one_cost = 25
+        if (self.get_mp() < special_attack_one_cost):
+            print("\nInsufficient mana!")
+            return False
+        
+        self.modify_mp(-(special_attack_one_cost))
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))  
+        print(f"\n{self.get_character_name()} poisons {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage")
+        
+        enemy.add_status(StatusEffect("Poison", 3, "DOT", status_effect.poison, self.get_attack()))
+        
+        return True
+    
+    # Special Attack Two (Seed Bomb): Deals great damage and inflicts Poison. Recovers moderate amount of hp 
+    def special_attack_two(self, enemy):
+        multiplier = 2.5
+        special_attack_two_cost = 50
+        if (self.get_mp() < special_attack_two_cost):
+            print("\nInsufficient mana!")
+            return False
+        
+        self.modify_mp(-(special_attack_two_cost))
+        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))
+        print(f"\n{self.get_character_name()} threw a cluster of exploding seeds at {enemy.get_character_name()}, dealing {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)} damage and recovering {self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier)/2} hp!")
+    
+        enemy.add_status(StatusEffect("Poison", 3, "DOT", status_effect.poison, self.get_attack()))
+    
+        return True
+    
+    def display_skills(self):
+        print("\n1. [Razor Strike]: Strikes the enemy with razor vines, dealing low damage. Recovers hp if enemy is poisoned")
+        print("2. [Regrow]: Regrows lost limbs, broken bones, and other damages. Recovers hp")
+        print("3. [Poison Vine]: Strikes the enemy with poisoned vines, dealing moderate damage, and inflicts Burn")
+        print("4. [Big Fireball]: Throws a barrage of exploding seeds at the enemy, dealing great damage, inflicts poison, and recovers hp")
+    
+    def next_Turn(self, enemy):
+        print(f"\n===== It's {self.get_character_name()}'s Turn! =====")
+        self.update_status_effects()
+        
+        # Ends match if Hp reaches 0
+        if (self.get_hp()<=0):
+            return
+        
+        self.display_status()
+        self.display_skills()
+        while (True):
+            choice = str(input("\nChoose your option: "))
+            if (choice == "1"):
+                self.basic_attack(enemy)
+                break
+            elif(choice == "2"):
+                turn_success = self.status_attack(enemy) # should return True/False
+                if (turn_success):
+                    break
+            elif(choice == "3"):
+                turn_success = self.special_attack_one(enemy)
+                if (turn_success):
+                    break
+            elif(choice == "4"):
+                turn_success = self.special_attack_two(enemy)
+                if (turn_success):
+                    break
+            else:
+                print("\nInvalid input!")
+        print(f"\n===== {self.get_character_name()}'s Turn Ended! =====")
+    
+# Ground Element Character        
+class GroundElement(Character):
+    def basic_attack(self, enemy):
+        pass
+    
+    def status_attack(self, enemy):
+        pass
+    
+    def special_attack_one(self, enemy):
+        pass
+    
+    def special_attack_two(self, enemy):
+        pass
+    
+    def display_skills(self):
+        pass
+    
+    def next_Turn(self, enemy):
+        pass
+    
+# Electric Element Character        
+class ElectricElement(Character):
+    def basic_attack(self, enemy):
+        pass
+    
+    def status_attack(self, enemy):
+        pass
+    
+    def special_attack_one(self, enemy):
+        pass
+    
+    def special_attack_two(self, enemy):
+        pass
+    
+    def display_skills(self):
+        pass
+    
+    def next_Turn(self, enemy):
+        pass
+    
+# Water Element Character        
+class WaterElement(Character):
+    def basic_attack(self, enemy):
+        pass
+    
+    def status_attack(self, enemy):
+        pass
+    
+    def special_attack_one(self, enemy):
+        pass
+    
+    def special_attack_two(self, enemy):
+        pass
+    
+    def display_skills(self):
+        pass
+    
+    def next_Turn(self, enemy):
+        pass
+    
+element_constructor = {
+    "fire": FireElement,
+    "grass": GrassElement,
+    "ground": GroundElement,
+    "electric": ElectricElement,
+    "water": WaterElement
+}

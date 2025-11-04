@@ -17,6 +17,9 @@ class Character(ABC):
         self.__max_mp = 5*level
         self.__mp = self.__max_mp
         
+        # To be implemented
+        self.shield = 0
+        
         self.__base_attack = 2*level
         self.__attack = self.__base_attack
         
@@ -79,11 +82,14 @@ class Character(ABC):
         self.__defense = self.__base_defense
         self.status_effects = []
 
-    # Modify hp stat (for taking damage)
+    # Modify hp stat (for taking damage/recovering health)
     def modify_hp(self, damage):
         self.__hp -= damage
         if (self.__hp <= 0):
             self.__hp = 0
+            
+        if (self.__hp >= self.__max_hp):
+            self.__hp = self.__max_hp
             
     # Modify mp stat (for skill usage)
     def modify_mp(self, value):

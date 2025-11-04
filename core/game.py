@@ -4,7 +4,12 @@ import sys
 from core.model.character import Character
 from core.model.character import StatusEffect
 from core.model.elements import FireElement
+from core.model.elements import GrassElement
+from core.model.elements import GroundElement
+from core.model.elements import ElectricElement
+from core.model.elements import WaterElement
 from core.model.elements import element_chart
+from core.model.elements import element_constructor
 from core.model import status_effects as status_effect
 
 # Run menu
@@ -82,7 +87,7 @@ def pvp_select():
         
         while (True):
             player_two_type = str(input(f"\nType in your Character Element for {player_two_name}: ").lower())
-            if player_two_type in element_chart:
+            if player_two_type in element_constructor:
                 print(f"\nYou are {player_two_name}. You are of the {player_two_type} element!")
                 break
             elif (player_one_type == "back"):
@@ -91,8 +96,9 @@ def pvp_select():
                 print("Please select from the options above!")
         break
     
-    player_one = FireElement(player_one_name, 10, player_one_type)
-    player_two = FireElement(player_two_name, 10, player_two_type)  
+    # Creates the player characters
+    player_one = element_constructor[player_one_type](player_one_name, 10, player_one_type)
+    player_two = element_constructor[player_two_type](player_two_name, 10, player_two_type)  
     
     #initiates pvp
     pvp(player_one, player_two)
@@ -167,7 +173,7 @@ def pvp(player_one, player_two):
 # Testing: Will remove at a later update
 def test():
     player_one = FireElement("player_one_test", 10, "fire")
-    player_two = FireElement("player_two_test", 10, "fire")
+    player_two = GrassElement("player_two_test", 10, "grass")
     pvp(player_one, player_two)
 
     
