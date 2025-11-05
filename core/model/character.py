@@ -117,6 +117,14 @@ class Character(ABC):
             
      # Add New Status to the character
     def add_status(self, effect):
+        
+        # Prevents DoT stacking
+        for active_effect in self.status_effects:
+             if (active_effect.get_name()==effect.get_name() and effect.get_effect_type() == "DOT"):
+                 active_effect.set_duration(effect.get_duration())
+                 print(f"\n{self.get_character_name()} is now affected by {effect.get_name()} for {effect.get_duration()} turns!")
+                 return
+        
         # Note: you are adding an object as a parameter here (see class StatusEffect)
         self.status_effects.append(effect)
         print(f"\n{self.get_character_name()} is now affected by {effect.get_name()} for {effect.get_duration()} turns!")
@@ -230,6 +238,10 @@ class StatusEffect:
     
     def get_effect_type(self):
         return self.__effect_type
+    
+    # If player inflicts the same DoT, only refreshes its duration
+    def set_duration(self, duration):
+        self.__duration = duration
         
     # Apply Buff/Debuff
     def apply(self, target):
