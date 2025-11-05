@@ -58,7 +58,7 @@ class FireElement(Character):
         
         return True
         
-    # Special Attack One [Flameburst]: Deals moderate damage, may inflict burn on target     
+    # Special Attack One [Flameburst]: Deals moderate damage, inflict burn on target     
     def special_attack_one(self, enemy):
         multiplier = 1.5
         special_attack_one_cost = 25
@@ -180,15 +180,31 @@ class GrassElement(Character):
         
         return True
     
-    # Special Attack One (Poison Vine): Deals moderate damage, may inflict poison on target
+    # Special Attack One (Poison Vine): Deals moderate damage, inflict poison on target
     def special_attack_one(self, enemy):
         multiplier = 1.5
         special_attack_one_cost = 25
         total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
+        restored_hp = total_damage
         
         if (self.get_mp() < special_attack_one_cost):
             print("\nInsufficient mana!")
             return False
+        
+        # If enemy is poisoned, heal
+        if (any(effect.get_name() == "Poison" for effect in enemy.status_effects)):
+            self.modify_mp(-(special_attack_one_cost))
+            
+            enemy.modify_hp(total_damage)
+            self.modify_hp(-restored_hp)  
+            
+            print(f"\n{self.get_character_name()} poisons {enemy.get_character_name()}, dealing {total_damage} damage")
+            print(f"\n{self.get_character_name()} also recovers {restored_hp} hp!")
+            
+            enemy.add_status(StatusEffect("Poison", 3, "DOT", status_effect.poison, self.get_attack()))
+            
+            return True
+            
         
         self.modify_mp(-(special_attack_one_cost))
         enemy.modify_hp(total_damage)  
