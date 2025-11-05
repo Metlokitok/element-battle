@@ -172,7 +172,7 @@ def pvp(player_one, player_two):
       
 # Testing: Will remove at a later update
 def test():
-    player_one = GrassElement("player_one_test", 10, "fire")
+    player_one = FireElement("player_one_test", 10, "fire")
     player_two = GrassElement("player_two_test", 10, "grass")
     pvp(player_one, player_two)
 
