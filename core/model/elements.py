@@ -86,14 +86,15 @@ class FireElement(Character):
         
         # Increase Multiplier when enemy is burning
         if (any(effect.get_name()=="Burn" for effect in enemy.status_effects)):
-            multiplier = 4
+            multiplier = 3
             self.modify_mp(-(special_attack_two_cost))
+            total_damage = self.calculate_dmg(self.get_attack(), enemy.get_defense(),multiplier)
             enemy.modify_hp(total_damage)
             print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {total_damage} damage")   
             return True
         
         self.modify_mp(-(special_attack_two_cost))
-        enemy.modify_hp(self.calculate_dmg(self.get_attack(), enemy.get_defense(), multiplier))
+        enemy.modify_hp(total_damage)
         print(f"\n{self.get_character_name()} hurled a huge fireball at {enemy.get_character_name()}, dealing a massive {total_damage} damage")
         
         # If enemy not burning, add burning status after
