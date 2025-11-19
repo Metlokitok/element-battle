@@ -6,8 +6,61 @@ from core.model.elements import element_chart
 from core.model.elements import element_constructor
 from core.model import status_effects as status_effect
 
+# Set Player Name 
+def set_player_name():
+    time.sleep(1)
+    player_name = str(input(f"\nGreetings, Player! What is your name (Type in your name)? "))
+    while (True):
+        # Getting Player name
+        time.sleep(1)        
+        
+        # Confirm Player name
+        print(f"\nYour name is {player_name}, is that correct? \n1. Yes \n2. No")
+        choice = str(input("\nEnter your choice: "))
+        
+        if (choice == "1"):
+            return player_name
+        elif (choice == "2"):
+            player_name = str(input(f"\nWhat is your name, then? "))
+        else:
+            print("\nInvalid Input!")
+            
+# Set Player Type
+def set_player_type(player_name):
+    time.sleep(1)
+    print("\nAvailable Types:")
+    for i, type_name in enumerate(element_chart, start=1):
+        print(f"{i}. {type_name.title()}")
+    print(f"{(i+1)}. Back")
+    
+    while (True):    
+        player_type = str(input(f"\nType in your Character Element for {player_name}: ").lower())
+           
+        if player_type in element_chart: 
+            time.sleep(1)
+            # Confirm Player Type           
+            print(f"\nYour have selected {player_type}, is that correct? \n1. Yes \n2. No (Choose Again)")
+            while (True):
+                choice = str(input("\nEnter your choice: "))                       
+                if (choice == "1"):
+                    return player_type
+                elif (choice == "2"):
+                    break
+                else:
+                    print("\nInvalid Input!")
+
+        elif (player_type == "back"):
+            game_mode_select()
+        else:
+            print("Invalid Input!")
+            
+# Game Menu
+
 # Run menu
 def run_menu():
+    os.system('cls' if os.name == "nt" else 'clear')
+    
+    time.sleep(1)
     print("\nWelcome to Element Battle!")
     time.sleep(1)
     print("\n1. Start")
@@ -26,6 +79,8 @@ def run_menu():
     game_mode_select()
     
 def game_mode_select():
+    time.sleep(0.5)
+    os.system('cls' if os.name == "nt" else 'clear')
     print("\nSelect a game mode:")
     print("1. Player versus Player")
     print("2. Player versus CPU")
@@ -57,57 +112,34 @@ def pvp_select():
     
     time.sleep(1)
     print("===== Player vs Player =====")
-    while (True):
-        # Getting Player name
-        time.sleep(1)
-        player_one_name = str(input(f"\nGreetings, Player One! What is your name? "))
-        
-        # Player Type selection
-        print("\nAvailable Types:")
-        for i, type_name in enumerate(element_chart, start=1):
-            print(f"{i}. {type_name.title()}")
-        print(f"{(i+1)}. Back")
-        
-        while (True):
-            player_one_type = str(input(f"\nType in your Character Element for {player_one_name}: ").lower())
-            if player_one_type in element_chart:
-                print(f"\nYou are {player_one_name}. You are of the {player_one_type} element!")
-                break
-            elif (player_one_type == "back"):
-                game_mode_select()
-            else:
-                print("Please select from the options above!")
-        break
-            
+
+    # Getting Player name
+    
     time.sleep(1)
     
-    while (True):
-        #Getting Player name
-        player_two_name = str(input(f"\nGreetings, Player Two! What is your name? "))
-        
-        # Player Type selection
-        print("\nAvailable Types:")
-        for i, type_name in enumerate(element_chart, start=1):
-            print(f"{i}. {type_name.title()}")
-        print(f"{(i+1)}. Back")
-        
-        while (True):
-            player_two_type = str(input(f"\nType in your Character Element for {player_two_name}: ").lower())
-            if player_two_type in element_constructor:
-                print(f"\nYou are {player_two_name}. You are of the {player_two_type} element!")
-                break
-            elif (player_one_type == "back"):
-                game_mode_select()
-            else:
-                print("Please select from the options above!")
-        break
+    # Player One
+    print("\n===== Player One =====")
+    player_one_name = set_player_name()
+    player_one_type = set_player_type(player_one_name)
+    print(f"\nYou are {player_one_name}. You are of the {player_one_type} element!")
+    
+    time.sleep(2)
+    
+    os.system('cls' if os.name == "nt" else 'clear')
+    time.sleep(1)
+                     
+    # Player Two
+    print("\n===== Player Two =====")
+    player_two_name = set_player_name()
+    player_two_type = set_player_type(player_two_name)
+    print(f"\nYou are {player_two_name}. You are of the {player_two_type} element!")
     
     # Creates the player characters
     player_one = element_constructor[player_one_type](player_one_name, 10, player_one_type)
     player_two = element_constructor[player_two_type](player_two_name, 10, player_two_type)  
     
     # Clears Terminal for PVP initiation
-    time.sleep(1)
+    time.sleep(2)
     os.system('cls' if os.name == 'nt' else 'clear')
     
     #initiates pvp
