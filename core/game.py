@@ -1,13 +1,7 @@
 # This is where the game happens
-
+import os
 import sys
-from core.model.character import Character
-from core.model.character import StatusEffect
-from core.model.elements import FireElement
-from core.model.elements import GrassElement
-from core.model.elements import GroundElement
-from core.model.elements import ElectricElement
-from core.model.elements import WaterElement
+import time
 from core.model.elements import element_chart
 from core.model.elements import element_constructor
 from core.model import status_effects as status_effect
@@ -15,7 +9,8 @@ from core.model import status_effects as status_effect
 # Run menu
 def run_menu():
     print("\nWelcome to Element Battle!")
-    print("1. Start")
+    time.sleep(1)
+    print("\n1. Start")
     print("2. Exit")    
     
     while (True):
@@ -24,6 +19,7 @@ def run_menu():
             break
         elif (choice == "2"):
             print("Exiting...")
+            time.sleep(1)
             sys.exit()
         else:
             print("invalid input!")
@@ -36,9 +32,11 @@ def game_mode_select():
     print("3. Endless Mode")
     print("4. Back")
     while (True):
+        time.sleep(1)
         choice = str(input("\nChoose an option: "))
         if (choice == "1"): 
             print("\nYou have selected Player vs Player")
+            time.sleep(1)
             pvp_select()
             break
         elif (choice == "2"):
@@ -54,8 +52,14 @@ def game_mode_select():
 
 # Player vs player select
 def pvp_select():
+    # clears terminal
+    os.system('cls' if os.name == "nt" else 'clear')
+    
+    time.sleep(1)
+    print("===== Player vs Player =====")
     while (True):
         # Getting Player name
+        time.sleep(1)
         player_one_name = str(input(f"\nGreetings, Player One! What is your name? "))
         
         # Player Type selection
@@ -75,6 +79,8 @@ def pvp_select():
                 print("Please select from the options above!")
         break
             
+    time.sleep(1)
+    
     while (True):
         #Getting Player name
         player_two_name = str(input(f"\nGreetings, Player Two! What is your name? "))
@@ -100,15 +106,20 @@ def pvp_select():
     player_one = element_constructor[player_one_type](player_one_name, 10, player_one_type)
     player_two = element_constructor[player_two_type](player_two_name, 10, player_two_type)  
     
+    # Clears Terminal for PVP initiation
+    time.sleep(1)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
     #initiates pvp
     pvp(player_one, player_two)
     
 def pvp(player_one, player_two):
+    
+    time.sleep(1)
     print("\n=====================")
     print("Player vs Player")
     print(f"{player_one.get_character_name()} vs {player_two.get_character_name()}!")
     print("=====================\n")
-
     # Game loop
     # Adds another loop for when players wants to rematch
     while (True):
@@ -117,63 +128,82 @@ def pvp(player_one, player_two):
         player_two.reset_stats()
         turn = 1
         while (player_one.get_hp() > 0 and player_two.get_hp() > 0):
-            
+            time.sleep(1)
             print(f"===== Turn {turn} =====")
-
+            
             # --- Player One's Turn ---
+            time.sleep(1)
             player_one.next_Turn(player_two)
             
             # Check if Player One is defeated via DoT
             if (player_one.get_hp() <= 0):
+                time.sleep(1)
                 print(f"\n{player_one.get_character_name()} has fainted!")
                 print(f"{player_two.get_character_name()} Wins!\n")
                 break
             
             # Check if Player Two is defeated
             if (player_two.get_hp() <= 0):
+                time.sleep(1)
                 print(f"\n{player_two.get_character_name()} has fainted!")
                 print(f"{player_one.get_character_name()} Wins!\n")
                 break
 
             # --- Player Two's Turn ---
+            time.sleep(1)
             player_two.next_Turn(player_one)
 
             # Check if Player One is defeated
             if (player_one.get_hp() <= 0):
+                time.sleep(1)
                 print(f"\n{player_one.get_character_name()} has fainted!")
                 print(f"{player_two.get_character_name()} Wins!\n")
                 break
             
             # Check if Player Two is defeated via DoT
             if (player_two.get_hp() <= 0):
+                time.sleep(1)
                 print(f"\n{player_two.get_character_name()} has fainted!")
                 print(f"{player_one.get_character_name()} Wins!\n")
                 break
             
+            # Increment Turn Number
             turn += 1
-            print()  # Spacing
+            
+            time.sleep(2)
+            
+            # Clears Terminal for readability
+            os.system('cls' if os.name == 'nt' else 'clear')
+            
+            # print()  # Spacing (Remove if not needed)
                    
     # Asks the players to either restart the game or go back to menu
+        time.sleep(1)
         print("\nContinue?")
         print("\n1. Rematch\n2. Back to menu\n3. Exit")
         
         while (True):
             choice = str(input("\nEnter your choice: "))
             if (choice == "1"):
+                time.sleep(1)
                 break # Continues through the loop, resetting player stats
             elif (choice == "2"):
+                time.sleep(1)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                time.sleep(1)
                 game_mode_select()
                 break
             elif (choice == "3"):
                 print("Exiting...")
+                time.sleep(1)
                 sys.exit()
             else:
                 print("Invalid input!")
       
 # Testing: Will remove at a later update
 def test():
-    player_one = FireElement("player_one_test", 10, "fire")
-    player_two = GrassElement("player_two_test", 10, "grass")
+    player_one = element_constructor["fire"]("Player One", 10, "fire")
+    player_two = element_constructor["fire"]("Player Two", 10, "fire")
     pvp(player_one, player_two)
 
     

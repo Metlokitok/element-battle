@@ -4,6 +4,7 @@
 
 import random
 import math
+import time
 from abc import ABC, abstractmethod
 from core.model.character import Character
 from core.model.character import StatusEffect
@@ -30,7 +31,6 @@ class FireElement(Character):
         
         # restores mp
         self.modify_mp(10)
-        
         enemy.modify_hp(total_damage)
         print(f"\n{self.get_character_name()} attacks {enemy.get_character_name()} for {total_damage} damage")
         
@@ -111,6 +111,9 @@ class FireElement(Character):
     # This is where players makes their turns
     def next_Turn(self, enemy):
         print(f"\n===== It's {self.get_character_name()}'s Turn! =====")
+        time.sleep(1)
+        
+        # Update Buff/Debuff Duration, DoTs, etc
         self.update_status_effects()
         
         # Ends match if Hp reaches 0
@@ -118,26 +121,34 @@ class FireElement(Character):
             return
         
         self.display_status()
+        time.sleep(1)
+        
         self.display_skills()
         while (True):
             choice = str(input("\nChoose your option: "))
             if (choice == "1"):
+                time.sleep(1)
                 self.basic_attack(enemy)
                 break
             elif(choice == "2"):
+                time.sleep(1)
                 turn_success = self.status_attack(enemy) # should return True/False
                 if (turn_success):
                     break
             elif(choice == "3"):
+                time.sleep(1)
                 turn_success = self.special_attack_one(enemy)
                 if (turn_success):
                     break
             elif(choice == "4"):
+                time.sleep(1)
                 turn_success = self.special_attack_two(enemy)
                 if (turn_success):
                     break
             else:
                 print("\nInvalid input!")
+                
+        time.sleep(1)
         print(f"\n===== {self.get_character_name()}'s Turn Ended! =====")
 
 # Grass Element Character        
@@ -243,6 +254,9 @@ class GrassElement(Character):
     
     def next_Turn(self, enemy):
         print(f"\n===== It's {self.get_character_name()}'s Turn! =====")
+        time.sleep(1)
+        
+        # Update Buff/Debuff Duration, DoTs, etc
         self.update_status_effects()
         
         # Ends match if Hp reaches 0
@@ -250,26 +264,34 @@ class GrassElement(Character):
             return
         
         self.display_status()
+        time.sleep(1)
+        
         self.display_skills()
         while (True):
             choice = str(input("\nChoose your option: "))
             if (choice == "1"):
+                time.sleep(1)
                 self.basic_attack(enemy)
                 break
             elif(choice == "2"):
+                time.sleep(1)
                 turn_success = self.status_attack(enemy) # should return True/False
                 if (turn_success):
                     break
             elif(choice == "3"):
+                time.sleep(1)
                 turn_success = self.special_attack_one(enemy)
                 if (turn_success):
                     break
             elif(choice == "4"):
+                time.sleep(1)
                 turn_success = self.special_attack_two(enemy)
                 if (turn_success):
                     break
             else:
                 print("\nInvalid input!")
+                
+        time.sleep(1)        
         print(f"\n===== {self.get_character_name()}'s Turn Ended! =====")
     
 # Ground Element Character        
