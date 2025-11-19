@@ -13,6 +13,7 @@ Notes for ideas, fixes, features, etc.
    - Level System for Endless Mode
    - Charge system
    - Damage calculation (for weakness, resistance)
+   - Standalone .exe file
 
 ## Self Notes
 - Quick Note

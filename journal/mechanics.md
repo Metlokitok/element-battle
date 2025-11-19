@@ -50,3 +50,8 @@
     - Can gain a shield, and recover hp when shield is active
     - Can reduce enemy attack and defense, and increase its own attack and defense at the same time
     - Ultimate deals damage, deals great damage when enemy is debuffed
+
+## Damage Calculations
+### Dealing/Receiving Damage
+- The formula for calculating total damage is (Base Attack * Multiplier) - Enemy Defense. The function used for this is calculate_dmg().  
+- The total damage will then be passed on to modify_hp() function

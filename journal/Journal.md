@@ -100,3 +100,15 @@ Personal Journal, so you can see my descent to madness
 - Fixes
     - Fixed Grass Element special attack one not healing hp when target is poisoned
     - Removed DoT stacking. Using consecutive DoT attacks will now refresh the duration of the existing DoT instead.
+
+## 11-16-2025 (11-19-2025)
+- Exam made me forget
+- Features:
+    - Terminal output update: text outputs now has a delay, and clears terminal after every turn
+    - Some code refactor
+- Fixes:
+    - Added confirmation option for players when typing in name/element type
+    - Fixed issue where Fire Element's Special Attack Two doesn't increase damage when target is inflicted with Burn
+- To Add:
+    - Damage Scaling adjustments(One day...)
+    - New elements
